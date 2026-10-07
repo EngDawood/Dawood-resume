@@ -18,6 +18,9 @@ const storyReq = { jsonrpc: '2.0', method: 'tools/call', params: { name: 'search
 const maxMs = Math.max(...demo.papers.sources.map((s) => s.ms));
 const papers = interleave(demo.papers.papers, 6);
 const paperChips = ['Model Context Protocol', 'Large language models', 'Speech recognition'];
+const jobsReq = { jsonrpc: '2.0', method: 'tools/call', params: { name: 'search_jobs', arguments: { query: demo.jobs.query, limit: 6 } } };
+const dlReq = { jsonrpc: '2.0', method: 'tools/call', params: { name: 'list_supported_platforms', arguments: {} } };
+const jobChips = ['engineer', 'developer', 'health', 'finance'];
 const storyChips = ['teamwork', 'data analysis', 'travel', 'education'];
 const swatches = ['#2b59ff', '#12a46b', '#e0453a', '#f2a93b', '#1d1f24'];
 const strings = Object.fromEntries(Object.entries(c).map(([k, v]) => [k, typeof v === 'object' && 'ar' in v ? (v as Record<Lang, string>)[L] : undefined]).filter(([, v]) => v));
@@ -33,6 +36,8 @@ const strings = Object.fromEntries(Object.entries(c).map(([k, v]) => [k, typeof 
       <div class="c-tabs" role="tablist" aria-label={c.title[L]}>
         <button type="button" role="tab" id="tab-papers" aria-controls="panel-papers" aria-selected="true" data-tab="papers">{c.tabs.papers[L]}</button>
         <button type="button" role="tab" id="tab-storyset" aria-controls="panel-storyset" aria-selected="false" tabindex="-1" data-tab="storyset">{c.tabs.storyset[L]}</button>
+        <button type="button" role="tab" id="tab-jobs" aria-controls="panel-jobs" aria-selected="false" tabindex="-1" data-tab="jobs">{c.tabs.jobs[L]}</button>
+        <button type="button" role="tab" id="tab-downloader" aria-controls="panel-downloader" aria-selected="false" tabindex="-1" data-tab="downloader">{c.tabs.downloader[L]}</button>
       </div>
       <span class="c-host" dir="ltr"><span class="c-dot" data-dot aria-hidden="true"></span><span data-host>paper-search-mcp.engdawood.com</span></span>
     </div>
@@ -106,6 +111,43 @@ const strings = Object.fromEntries(Object.entries(c).map(([k, v]) => [k, typeof 
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- jobs -->
+    <div class="c-panel" id="panel-jobs" role="tabpanel" aria-labelledby="tab-jobs" data-panel="jobs" hidden>
+      <form class="c-form" data-form="jobs">
+        <label class="c-label" for="q-jobs">{c.queryJobs[L]}</label>
+        <div class="c-row">
+          <input id="q-jobs" name="q" dir="ltr" autocomplete="off" spellcheck="false" maxlength="60" required value={demo.jobs.query} />
+          <button class="c-run" type="submit">{c.run[L]}</button>
+        </div>
+        <div class="c-chips">{jobChips.map((q) => <button type="button" data-q={q} dir="ltr">{q}</button>)}</div>
+      </form>
+      <div class="c-block">
+        <p class="c-cap">{c.request[L]}</p>
+        <pre class="c-code" dir="ltr"><code data-req set:html={highlightJson(jobsReq)} /></pre>
+      </div>
+      <p class="c-cap">{c.results[L]} · <span data-jobs-total>{demo.jobs.total.toLocaleString(L === 'ar' ? 'ar-EG' : 'en-US')}</span> {c.jobsTotal[L]}</p>
+      <ol class="c-results" data-jobs-results aria-live="polite">
+        {demo.jobs.jobs.map((j) => (
+          <li>
+            <a class="r-title" href={j.url} target="_blank" rel="noopener" dir="auto">{j.title}</a>
+            <span class="r-meta" dir="auto">{[j.company, j.location, j.deadline && `${c.deadline[L]} ${j.deadline}`].filter(Boolean).join(' · ')}</span>
+            <span class="r-src" dir="ltr">{j.source}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <!-- downloader (captured at build time: the server needs a secret key) -->
+    <div class="c-panel" id="panel-downloader" role="tabpanel" aria-labelledby="tab-downloader" data-panel="downloader" hidden>
+      <p class="c-note">{c.dlNote[L]}</p>
+      <div class="c-block">
+        <p class="c-cap">{c.request[L]}</p>
+        <pre class="c-code" dir="ltr"><code set:html={highlightJson(dlReq)} /></pre>
+      </div>
+      <p class="c-cap">{c.dlPlatforms[L]}{demo.downloader.ms != null && ` · ${demo.downloader.ms} ms`}</p>
+      <ul class="c-platforms" dir="ltr">{demo.downloader.platforms.map((n) => <li>{n}</li>)}</ul>
     </div>
 
     <footer class="c-foot">

@@ -1,37 +1,37 @@
 {
   "papers": {
     "query": "Arabic natural language processing",
-    "ms": 530,
+    "ms": 404,
     "sources": [
       {
         "source": "openalex",
         "count": 3,
-        "ms": 20
-      },
-      {
-        "source": "europepmc",
-        "count": 3,
-        "ms": 21
+        "ms": 22
       },
       {
         "source": "arxiv",
         "count": 3,
-        "ms": 21
+        "ms": 22
+      },
+      {
+        "source": "europepmc",
+        "count": 3,
+        "ms": 22
       },
       {
         "source": "crossref",
         "count": 3,
-        "ms": 21
+        "ms": 22
       },
       {
         "source": "pubmed",
         "count": 3,
-        "ms": 21
+        "ms": 23
       },
       {
         "source": "openreview",
         "count": 3,
-        "ms": 107
+        "ms": 60
       }
     ],
     "papers": [
@@ -155,7 +155,7 @@
   },
   "storyset": {
     "query": "developer",
-    "ms": 859,
+    "ms": 923,
     "results": [
       {
         "title": "Developer activity",
@@ -201,5 +201,78 @@
       }
     ]
   },
-  "updatedAt": "2026-10-07"
+  "updatedAt": "2026-10-07",
+  "jobs": {
+    "query": "engineer",
+    "ms": 134,
+    "total": 131,
+    "jobs": [
+      {
+        "title": "WASH officer WHO Aden P3 NORCAP",
+        "company": "Norwegian Refugee Council",
+        "location": "Aden",
+        "deadline": "2026-10-12",
+        "source": "unjobnet",
+        "url": "https://www.unjobnet.org/jobs/detail/nrc-wash-officer-who-aden-p3-norcap-89491881"
+      },
+      {
+        "title": "Full Stack - AI Developer",
+        "company": "Smart Life",
+        "location": "Sana'a",
+        "deadline": "2026-10-31",
+        "source": "yemenhr",
+        "url": "https://yemenhr.com/jobs/full-stack-ai-developer-smart-life-sanaa-b750a6e5"
+      },
+      {
+        "title": "Backend Developer",
+        "company": "Confidential",
+        "location": "Sana'a",
+        "deadline": "2026-10-12",
+        "source": "yemenhr",
+        "url": "https://yemenhr.com/jobs/backend-developer-confidential-sanaa-7eddee26"
+      },
+      {
+        "title": "Shelter and WaSH Officer Yemen Hodeidah (National)",
+        "company": "Norwegian Refugee Council",
+        "location": "Al Hudaydah",
+        "deadline": "2026-10-12",
+        "source": "unjobnet",
+        "url": "https://www.unjobnet.org/jobs/detail/nrc-shelter-and-wash-officer-yemen-hodeidah-national-89287759"
+      },
+      {
+        "title": "Shelter and WaSH Technical Assistant Yemen Hodeidah (National)",
+        "company": "Norwegian Refugee Council",
+        "location": "Al Hudaydah",
+        "deadline": "2026-10-12",
+        "source": "unjobnet",
+        "url": "https://www.unjobnet.org/jobs/detail/nrc-shelter-and-wash-technical-assistant-yemen-hodeidah-national-89287760"
+      },
+      {
+        "title": "Shelter and WASH Officer",
+        "company": "NRC",
+        "location": "Hodiedah",
+        "deadline": "2026-10-12",
+        "source": "yemenhr",
+        "url": "https://yemenhr.com/jobs/shelter-and-wash-officer-nrc-hodiedah-e06fc4d1"
+      }
+    ]
+  },
+  "downloader": {
+    "ms": null,
+    "platforms": [
+      "TikTok",
+      "Instagram",
+      "Twitter",
+      "YouTube",
+      "Facebook",
+      "Threads",
+      "SoundCloud",
+      "Spotify",
+      "Pinterest",
+      "GitHub",
+      "MediaFire",
+      "CapCut",
+      "SnackVideo"
+    ]
+  }
 }
