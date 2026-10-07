@@ -91,7 +91,7 @@ function pick(i: number) {
     </nav>
     <div class="nav-tools">
       <a class="chip" href={url(`/personal/${other(lang)}/`)} hreflang={other(lang)} lang={other(lang)}>{p.nav.other[L]}</a>
-      <button class="chip theme" type="button" data-theme-toggle data-day={p.nav.day[L]} data-night={p.nav.night[L]} aria-label={ar ? 'تبديل النهار والليل' : 'Toggle day and night'}>
+      <button class="chip theme" type="button" data-theme-toggle data-day={p.nav.day[L]} data-night={p.nav.night[L]} aria-label={ar ? 'تبديل الوضع الفاتح والداكن' : 'Toggle light and dark mode'}>
         <span class="sun" aria-hidden="true"></span><span class="theme-label">{p.nav.day[L]}</span>
       </button>
       <a class="chip solid" href={url(`/${lang}/`)}>{p.nav.cv[L]}</a>

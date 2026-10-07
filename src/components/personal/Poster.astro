@@ -196,7 +196,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
       {id === 'storyset' && (
         <>
           <rect x="10" y="300" width="280" height="100" class="shade" />
-          <text x="150" y="346" class="f-disp mid" text-anchor="middle">{ar ? 'أعد تلوينها' : 'Recolor it'}</text>
+          <text x="150" y="346" class="f-disp mid" text-anchor="middle">{ar ? 'تعديل الألوان' : 'Recolor'}</text>
           <text x="150" y="372" class="f-sans cap" text-anchor="middle">storyset · SVG · MCP</text>
         </>
       )}
@@ -239,13 +239,13 @@ const fmt = (n: number) => n.toLocaleString('en-US');
           <text class="f-sans label ring" direction="ltr"><textPath href={`#${k}-ring`} startOffset="0">{platforms.join('  ·  ')}  ·</textPath></text>
           <circle cx="150" cy="210" r="40" class="disc" />
           <text x="150" y="226" class="f-disp mid dark" text-anchor="middle">{ar ? '١٠' : '10'}</text>
-          <text x="150" y="372" class="f-sans cap" text-anchor="middle">{ar ? 'منصّات، رابط واحد' : 'platforms, one link'}</text>
+          <text x="150" y="372" class="f-sans cap" text-anchor="middle">{ar ? 'منصّات' : 'platforms'}</text>
         </>
       )}
       {id === 'rss-bridge' && (
         <>
           <text x="272" y="112" class="f-disp big" text-anchor="end" direction="ltr">RSS</text>
-          {ar ? <text x="272" y="146" class="f-sans cap" text-anchor="start" direction="rtl">← إلى تيليجرام، بالعربية</text> : <text x="272" y="146" class="f-sans cap" text-anchor="end" direction="ltr">→ Telegram, in Arabic</text>}
+          {ar ? <text x="272" y="146" class="f-sans cap" text-anchor="start" direction="rtl">← إلى تيليجرام بملخّص عربي</text> : <text x="272" y="146" class="f-sans cap" text-anchor="end" direction="ltr">→ Telegram, summarized in Arabic</text>}
         </>
       )}
       {id === 'tamkeen' && (

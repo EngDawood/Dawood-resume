@@ -71,7 +71,7 @@ export const projects: Project[] = [
     group: 'ai',
     title: { ar: 'خادم MCP للبحث الأكاديمي العربي', en: 'Arabic Scholar MCP Server' },
     hook: {
-      ar: 'أكثر من 4 ملايين سجل أكاديمي عربي، في متناول أي وكيل ذكاء اصطناعي.',
+      ar: 'يتيح لأي وكيل ذكاء اصطناعي البحث في أكثر من 4 ملايين سجل أكاديمي عربي.',
       en: '4M+ Arabic academic records, one tool call away for any AI agent.',
     },
     links: [{ label: 'github.com/EngDawood/arabic-scholar-mcp-server', href: 'https://github.com/EngDawood/arabic-scholar-mcp-server' }],
@@ -92,7 +92,7 @@ export const projects: Project[] = [
     group: 'ai',
     title: { ar: 'خادم MCP للبحث في الأوراق العلمية', en: 'Paper Search MCP Server' },
     hook: {
-      ar: '18 مصدرًا أكاديميًا في استعلام واحد، دون أي مفتاح API.',
+      ar: 'يبحث في 18 مصدرًا أكاديميًا دفعة واحدة، دون الحاجة إلى مفتاح API.',
       en: '18 academic sources in a single query, no API key needed.',
     },
     links: [{ label: 'github.com/EngDawood/paper-search-mcp-server', href: 'https://github.com/EngDawood/paper-search-mcp-server' }],
@@ -113,8 +113,8 @@ export const projects: Project[] = [
     group: 'ai',
     title: { ar: 'خادم Storyset MCP', en: 'Storyset MCP Server' },
     hook: {
-      ar: 'رسومات توضيحية يبحث عنها الذكاء الاصطناعي ويعيد تلوينها، مجانًا للجميع.',
-      en: 'Illustrations an AI agent can search and recolor. Free for everyone.',
+      ar: 'يتيح للذكاء الاصطناعي البحث عن رسومات توضيحية وتعديل ألوانها، ومتاح مجانًا.',
+      en: 'Lets AI agents search illustrations and change their colors. Free to use.',
     },
     links: [
       { label: 'github.com/EngDawood/MCP-STORYSET', href: 'https://github.com/EngDawood/MCP-STORYSET' },
@@ -137,7 +137,7 @@ export const projects: Project[] = [
     group: 'ai',
     title: { ar: 'خادم Mistral OCR وأداة سطر الأوامر', en: 'Mistral OCR MCP Server & CLI' },
     hook: {
-      ar: 'من ملف PDF أو صورة أو تسجيل صوتي إلى نص نظيف، عبر npm.',
+      ar: 'يستخرج النص من ملفات PDF والصور والتسجيلات الصوتية، ومنشور على npm.',
       en: 'PDF, image or audio in. Clean text out. One npx away.',
     },
     links: [
@@ -161,7 +161,7 @@ export const projects: Project[] = [
     group: 'bots',
     title: { ar: 'بوت وظائف اليمن · ‎@hr_yemen', en: 'Yemen Jobs Bot · @hr_yemen' },
     hook: {
-      ar: `قناة وظائف يتابعها ${live.subscribers.toLocaleString('en-US')} شخص، تُدار بالكامل من Cloudflare Worker.`,
+      ar: `قناة وظائف يتابعها ${live.subscribers.toLocaleString('en-US')} مشترك، وتعمل تلقائيًا بالكامل على Cloudflare Workers.`,
       en: `A jobs channel followed by ${live.subscribers.toLocaleString('en-US')} people, run entirely by a Cloudflare Worker.`,
     },
     links: [
@@ -187,7 +187,7 @@ export const projects: Project[] = [
     group: 'bots',
     title: { ar: 'بوت ترجمة الفيديو', en: 'Video Caption Bot' },
     hook: {
-      ar: 'أرسل فيديو بأي لغة، يعود إليك مترجمًا بالعربية داخل الصورة.',
+      ar: 'أرسل فيديو بأي لغة، ويعيده لك البوت مع ترجمة عربية مدمجة فيه.',
       en: 'Send a video in any language. Get it back with captions burned in.',
     },
     links: [{ label: 'github.com/EngDawood/video-caption', href: 'https://github.com/EngDawood/video-caption' }],
@@ -208,8 +208,8 @@ export const projects: Project[] = [
     group: 'bots',
     title: { ar: 'بوت تيليجرام متعدد المنصّات لتحميل الوسائط', en: 'Multi-Platform Telegram Media Bot' },
     hook: {
-      ar: 'عشر منصّات، رابط واحد، وكل ذلك داخل تيليجرام.',
-      en: 'Ten platforms, one link, all inside Telegram.',
+      ar: 'حمّل من 10 منصّات بإرسال الرابط فقط، دون مغادرة تيليجرام.',
+      en: 'Download from 10 platforms by sending a link, without leaving Telegram.',
     },
     links: [
       { label: 't.me/download_media_4bot', href: 'https://t.me/download_media_4bot' },
@@ -232,7 +232,7 @@ export const projects: Project[] = [
     group: 'bots',
     title: { ar: 'بوت RSS Bridge', en: 'RSS Bridge Bot' },
     hook: {
-      ar: 'من Instagram وTikTok وأي خلاصة RSS إلى قنوات تيليجرام، مع ملخّص عربي.',
+      ar: 'ينشر محتوى Instagram وTikTok وخلاصات RSS في قنوات تيليجرام، مع ملخّص بالعربية.',
       en: 'Instagram, TikTok and any RSS feed into Telegram channels, summarized in Arabic.',
     },
     links: [{ label: 'github.com/EngDawood/rss-cloudflare', href: 'https://github.com/EngDawood/rss-cloudflare' }],
@@ -254,8 +254,8 @@ export const projects: Project[] = [
     client: true,
     title: { ar: 'موقع معهد تمكين التقني', en: 'Tamkeen Institute of Technology Website' },
     hook: {
-      ar: 'الموقع الرسمي لمعهد تقني سعودي: عربي أولًا، سريع، وبلا JavaScript.',
-      en: 'The official site of a Saudi technical institute. Arabic-first, fast, zero JavaScript.',
+      ar: 'الموقع الرسمي لمعهد تقني في السعودية، بالعربية والإنجليزية، وسريع دون JavaScript.',
+      en: 'The official site of a technical institute in Saudi Arabia, in Arabic and English, with no JavaScript.',
     },
     links: [{ label: 'tit-edu-sa.vercel.app', href: 'https://tit-edu-sa.vercel.app/contact/' }],
     bullets: {
@@ -275,8 +275,8 @@ export const projects: Project[] = [
     group: 'web',
     title: { ar: 'موقع شخصي ثنائي اللغة على EmDash CMS', en: 'Bilingual Portfolio on EmDash CMS' },
     hook: {
-      ar: 'موقع يديره وكلاء الذكاء الاصطناعي عبر 46 أداة MCP.',
-      en: 'A website AI agents can manage through 46 MCP tools.',
+      ar: 'موقعي الشخصي، ويمكن لوكلاء الذكاء الاصطناعي إدارته عبر 46 أداة MCP.',
+      en: 'My personal site, which AI agents can manage through 46 MCP tools.',
     },
     links: [
       { label: 'engdawood.com', href: 'https://engdawood.com' },
@@ -299,8 +299,8 @@ export const projects: Project[] = [
     group: 'web',
     title: { ar: 'خريطة اليمن · خريطة الغربة', en: 'Yemen Map · The Ghurba Map' },
     hook: {
-      ar: 'خط لكل مغترب، من مديريته في اليمن إلى مدينته في العالم.',
-      en: 'One line per Yemeni abroad, from a home district to a city in the world.',
+      ar: 'كل مغترب يمني يرسم خطًا من مديريته إلى المدينة التي يعيش فيها.',
+      en: 'Each Yemeni abroad draws a line from their home district to the city they live in.',
     },
     links: [
       { label: 'yemen-map.dawod.workers.dev', href: 'https://yemen-map.dawod.workers.dev' },
@@ -323,7 +323,7 @@ export const projects: Project[] = [
     group: 'web',
     title: { ar: 'خط ثمانية للويب', en: 'Thmanyah Font for the Web' },
     hook: {
-      ar: 'الخط الذي تقرأ به هذه الصفحة الآن، في سطر CSS واحد.',
+      ar: 'الخط الذي تقرأ به هذه الصفحة، جاهز للاستخدام بسطر CSS واحد.',
       en: 'The typeface you are reading right now, in one line of CSS.',
     },
     links: [{ label: 'npm: @dawod/thmanyah-font-web', href: 'https://www.npmjs.com/package/@dawod/thmanyah-font-web' }],

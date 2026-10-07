@@ -11,6 +11,8 @@ import '../styles/professional.css';
 interface Props { lang: Lang; path: string }
 const { lang, path } = Astro.props;
 const L = lang;
+// The resume lists only professional channels; Telegram and X stay on the personal site.
+const cvLinks = profile.links.filter((l) => l.kind !== 'telegram' && l.kind !== 'x');
 const sep = L === 'ar' ? '، ' : ', ';
 const site = Astro.site!;
 const canonical = new URL(url(`/${lang}/`), site).href;
@@ -35,7 +37,7 @@ const jsonld = {
   address: { '@type': 'PostalAddress', addressLocality: "Sana'a", addressCountry: 'YE' },
   url: canonical,
   image: new URL(url('/profile-doc.png'), site).href,
-  sameAs: profile.links.map((l) => l.href),
+  sameAs: cvLinks.map((l) => l.href),
   knowsLanguage: ['ar', 'en'],
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'Hajjah University' },
 };
@@ -77,7 +79,7 @@ const jsonld = {
           <li>{profile.location[L]}</li>
           <li><a href={profile.phoneHref} dir="ltr">{profile.phone}</a></li>
           <li><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
-          {profile.links.map((l) => <li><a href={l.href} dir="ltr">{l.label}</a></li>)}
+          {cvLinks.map((l) => <li><a href={l.href} dir="ltr">{l.label}</a></li>)}
         </ul>
       </div>
       <img class="photo" src={url('/profile-doc.png')} alt={profile.name[L]} width="687" height="1024" />
