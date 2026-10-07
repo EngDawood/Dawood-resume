@@ -1,0 +1,16 @@
+{
+  "name": "dawood-resume",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dawood Saleh: ATS resume (AR/EN) and interactive personal site",
+  "scripts": {
+    "stats": "node scripts/fetch-stats.mjs",
+    "dev": "astro dev",
+    "build": "node scripts/fetch-stats.mjs && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.3.6"
+  }
+}

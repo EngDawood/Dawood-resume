@@ -1,0 +1,24 @@
+---
+import { url } from '../lib';
+import '../styles/professional.css';
+---
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 · Dawood Saleh</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+</head>
+<body class="pro">
+  <main class="sheet" style="text-align:center;padding-block:18mm">
+    <h1>404</h1>
+    <p>هذه الصفحة غير موجودة. · This page does not exist.</p>
+    <p style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+      <a class="bar-link" href={url('/ar/')}>السيرة الذاتية</a>
+      <a class="bar-link" href={url('/en/')} lang="en">Resume</a>
+      <a class="bar-link accent" href={url('/personal/')}>النسخة التفاعلية · Interactive</a>
+    </p>
+  </main>
+</body>
+</html>

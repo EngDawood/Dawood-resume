@@ -1,0 +1,156 @@
+---
+// ATS-friendly resume: one column, semantic headings, real text (no images of text),
+// links printed as readable URLs, A4 print stylesheet. Language comes from the URL only.
+import {
+  type Lang, profile, summary, projects, experience, education, skills,
+  certifications, languages, accomplishments, ui, live,
+} from '../data/resume';
+import { url, dirOf, other } from '../lib';
+import '../styles/professional.css';
+
+interface Props { lang: Lang; path: string }
+const { lang, path } = Astro.props;
+const L = lang;
+const sep = L === 'ar' ? '، ' : ', ';
+const site = Astro.site!;
+const canonical = new URL(url(`/${lang}/`), site).href;
+const title = L === 'ar' ? 'داود صالح | السيرة الذاتية' : 'Dawood Saleh | Resume';
+const description = L === 'ar'
+  ? 'السيرة الذاتية لداود صالح: مهندس برمجيات، أدوات الذكاء الاصطناعي وخوادم MCP، مطوّر واجهات أمامية.'
+  : 'Resume of Dawood Saleh: Software Engineer, AI tooling & MCP servers, front-end developer.';
+const t = {
+  print: { ar: 'طباعة / PDF', en: 'Print / PDF' },
+  personal: { ar: 'النسخة التفاعلية', en: 'Interactive version' },
+  langName: { ar: 'English', en: 'العربية' },
+  updated: { ar: 'الأرقام محدّثة تلقائيًا', en: 'Figures auto-updated' },
+};
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name.en,
+  alternateName: profile.name.ar,
+  jobTitle: 'Software Engineer',
+  email: `mailto:${profile.email}`,
+  telephone: profile.phone,
+  address: { '@type': 'PostalAddress', addressLocality: "Sana'a", addressCountry: 'YE' },
+  url: canonical,
+  image: new URL(url('/profile-doc.png'), site).href,
+  sameAs: profile.links.map((l) => l.href),
+  knowsLanguage: ['ar', 'en'],
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Hajjah University' },
+};
+---
+<!doctype html>
+<html lang={lang} dir={dirOf(lang)}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="ar" href={new URL(url('/ar/'), site).href} />
+  <link rel="alternate" hreflang="en" href={new URL(url('/en/'), site).href} />
+  <link rel="alternate" hreflang="x-default" href={new URL(url('/'), site).href} />
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(url(`/og/cv-${lang}.png`), site).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+  <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+</head>
+<body class="pro">
+  <nav class="bar" aria-label={L === 'ar' ? 'أدوات' : 'Tools'}>
+    <a class="bar-link" href={url(`/${other(lang)}/`)} hreflang={other(lang)} lang={other(lang)}>{t.langName[L]}</a>
+    <button class="bar-link" type="button" onclick="window.print()">{t.print[L]}</button>
+    <a class="bar-link accent" href={url(`/personal/${lang}/`)}>{t.personal[L]} <span aria-hidden="true">{L === 'ar' ? '←' : '→'}</span></a>
+  </nav>
+
+  <main class="sheet">
+    <header class="head">
+      <div class="head-text">
+        <h1>{profile.name[L]}</h1>
+        <p class="role">{profile.role[L]}</p>
+        <ul class="contact">
+          <li>{profile.location[L]}</li>
+          <li><a href={profile.phoneHref} dir="ltr">{profile.phone}</a></li>
+          <li><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
+          {profile.links.map((l) => <li><a href={l.href} dir="ltr">{l.label}</a></li>)}
+        </ul>
+      </div>
+      <img class="photo" src={url('/profile-doc.png')} alt={profile.name[L]} width="687" height="1024" />
+    </header>
+
+    <section>
+      <h2>{ui.sections.summary[L]}</h2>
+      {summary[L].map((p) => <p>{p}</p>)}
+    </section>
+
+    <section>
+      <h2>{ui.sections.experience[L]}</h2>
+      {experience.map((j) => (
+        <article class="item">
+          <h3>{j.role[L]}{sep}{j.org[L]}</h3>
+          <p class="meta">{j.meta[L]}</p>
+          <ul>{j.bullets[L].map((b) => <li>{b}</li>)}</ul>
+        </article>
+      ))}
+    </section>
+
+    <section>
+      <h2>{ui.sections.projects[L]}</h2>
+      {projects.map((p) => (
+        <article class="item">
+          <h3>{p.title[L]}{p.client && <span class="tag"> ({ui.clientTag[L]})</span>}</h3>
+          <p class="meta">
+            {p.links.map((l, i) => <>{i > 0 && <span class="sep"> · </span>}<a href={l.href} dir="ltr">{l.label}</a></>)}
+          </p>
+          <ul>{p.bullets[L].map((b) => <li>{b}</li>)}</ul>
+        </article>
+      ))}
+    </section>
+
+    <section>
+      <h2>{ui.sections.education[L]}</h2>
+      {education.map((e) => (
+        <article class="item">
+          <h3>{e.org[L]}{sep}{e.title[L]}</h3>
+          <p class="meta">{e.meta[L]}</p>
+          {e.bullets[L].length > 0 && <ul>{e.bullets[L].map((b) => <li>{b}</li>)}</ul>}
+        </article>
+      ))}
+    </section>
+
+    <section>
+      <h2>{ui.sections.skills[L]}</h2>
+      <dl class="rows">
+        {skills.map((s) => (<div><dt>{s.label[L]}</dt><dd>{s.items[L]}</dd></div>))}
+      </dl>
+    </section>
+
+    <section class="split">
+      <div>
+        <h2>{ui.sections.certs[L]}</h2>
+        <ul class="plain">
+          {certifications.map((c) => <li><span class="year">{c.year}</span> <strong>{c.title[L]}</strong>, {c.issuer[L]}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>{ui.sections.languages[L]}</h2>
+        <ul class="plain">
+          {languages.map((x) => <li><strong>{x.name[L]}</strong>: {x.level[L]}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>{ui.sections.accomplishments[L]}</h2>
+      <ul>{accomplishments[L].map((a) => <li>{a}</li>)}</ul>
+    </section>
+
+    <p class="foot">{t.updated[L]}: {live.updatedAt}</p>
+  </main>
+</body>
+</html>

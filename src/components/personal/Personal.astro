@@ -1,0 +1,233 @@
+---
+import { type Lang, profile, projects, experience, live } from '../../data/resume';
+import { p, stack } from '../../data/personal';
+import { url, dirOf, other } from '../../lib';
+import Qamariya from './Qamariya.astro';
+import Poster from './Poster.astro';
+import '../../styles/personal.css';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = lang;
+const ar = L === 'ar';
+const site = Astro.site!;
+const canonical = new URL(url(`/personal/${lang}/`), site).href;
+const nf = (n: number) => n.toLocaleString(ar ? 'ar-EG' : 'en-US');
+
+const numbers = [
+  { value: live.subscribers, label: p.numbers.subscribers[L], live: 'subscribers' },
+  { value: live.npmMonthly, label: p.numbers.npm[L], live: 'npm' },
+  { value: 4, label: p.numbers.mcp[L] },
+  { value: 18, label: p.numbers.sources[L] },
+];
+const words = p.statement[L].split(' ');
+const groups = ['all', 'ai', 'bots', 'web'] as const;
+
+const pathItems = [
+  { years: ar ? '2023 - الآن' : '2023 - now', ...pick(0) },
+  { years: '2022 - 2023', ...pick(1) },
+  { years: ar ? '2020 - الآن' : '2020 - now', ...pick(2) },
+  { years: ar ? '2020 - الآن' : '2020 - now', ...pick(3) },
+  { years: '2021', ...pick(4) },
+  { years: '2018 - 2019', ...pick(5) },
+];
+function pick(i: number) {
+  const j = experience[i];
+  return { role: j.role[L], org: j.org[L], line: j.bullets[L][0] };
+}
+---
+<!doctype html>
+<html lang={lang} dir={dirOf(lang)} data-theme="night">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{p.title[L]}</title>
+  <meta name="description" content={p.description[L]} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="ar" href={new URL(url('/personal/ar/'), site).href} />
+  <link rel="alternate" hreflang="en" href={new URL(url('/personal/en/'), site).href} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={p.title[L]} />
+  <meta property="og:description" content={p.description[L]} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(url(`/og/personal-${lang}.png`), site).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0c0d11" />
+  <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@dawod/thmanyah-font-web/index.css" />
+  <script is:inline>
+    document.documentElement.classList.add('js');
+    try { const t = localStorage.getItem('dr-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body class="per">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <radialGradient id="lamp-grad">
+        <stop offset="0" stop-color="#fffaf0" />
+        <stop offset=".25" stop-color="#ffdfa0" />
+        <stop offset=".6" stop-color="#d98a3a" stop-opacity=".45" />
+        <stop offset="1" stop-color="#d98a3a" stop-opacity="0" />
+      </radialGradient>
+      <filter id="grain" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="3" />
+        <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .2 0" />
+      </filter>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#work">{p.nav.work[L]}</a>
+
+  <header class="nav">
+    <a class="brand" href={url(`/personal/${lang}/`)} aria-label={profile.name[L]}>
+      <svg viewBox="0 0 40 48" aria-hidden="true"><path d="M4 46V20a16 16 0 0 1 32 0v26z" /><path d="M20 4v42M4 22h32" /></svg>
+      <span>{profile.name[L]}</span>
+    </a>
+    <nav class="nav-links" aria-label={ar ? 'الأقسام' : 'Sections'}>
+      <a href="#work">{p.nav.work[L]}</a>
+      <a href="#path">{p.nav.path[L]}</a>
+      <a href="#contact">{p.nav.contact[L]}</a>
+    </nav>
+    <div class="nav-tools">
+      <a class="chip" href={url(`/personal/${other(lang)}/`)} hreflang={other(lang)} lang={other(lang)}>{p.nav.other[L]}</a>
+      <button class="chip theme" type="button" data-theme-toggle data-day={p.nav.day[L]} data-night={p.nav.night[L]} aria-label={ar ? 'تبديل النهار والليل' : 'Toggle day and night'}>
+        <span class="sun" aria-hidden="true"></span><span class="theme-label">{p.nav.day[L]}</span>
+      </button>
+      <a class="chip solid" href={url(`/${lang}/`)}>{p.nav.cv[L]}</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" data-hero>
+      <div class="hero-text">
+        <p class="kicker reveal">{p.hero.kicker[L]}</p>
+        <h1 class="name reveal" style="--d:80ms">{profile.name[L]}</h1>
+        <p class="line reveal" style="--d:160ms">{p.hero.line[L]}</p>
+        <div class="ctas reveal" style="--d:240ms">
+          <a class="btn primary" href="#work">{p.hero.cta[L]}</a>
+          <a class="btn" href={url(`/${lang}/`)}>{p.nav.cv[L]}</a>
+        </div>
+      </div>
+      <div class="hero-art reveal" style="--d:120ms">
+        <Qamariya lang={lang} label={p.hero.windowLabel[L]} />
+        <p class="caption">{p.hero.caption[L]}</p>
+      </div>
+    </section>
+
+    <section class="numbers" aria-label={p.numbers.live[L]}>
+      <p class="live-note"><span class="pulse" aria-hidden="true"></span>{p.numbers.live[L]}</p>
+      <ul>
+        {numbers.map((n, i) => (
+          <li class="reveal" style={`--d:${i * 90}ms`}>
+            <strong class="num" data-count={n.value} data-live={n.live} data-locale={ar ? 'ar-EG' : 'en-US'}>{nf(n.value)}</strong>
+            <span>{n.label}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="statement">
+      <p>{words.map((w, i) => <><span class="w" style={`--i:${i}`}>{w}</span>{' '}</>)}</p>
+    </section>
+
+    <section id="work" class="work">
+      <header class="work-head">
+        <h2 class="reveal">{p.work.title[L]}</h2>
+        <p class="sub reveal" style="--d:80ms">{p.work.sub[L]}</p>
+        <div class="filters reveal" style="--d:140ms" role="group" aria-label={ar ? 'تصفية' : 'Filter'}>
+          {groups.map((g) => (
+            <button type="button" class:list={['filter', g === 'all' && 'on']} data-filter={g} aria-pressed={g === 'all' ? 'true' : 'false'}>
+              {p.work.filters[g][L]}
+              <span class="count">{g === 'all' ? projects.length : projects.filter((x) => x.group === g).length}</span>
+            </button>
+          ))}
+        </div>
+      </header>
+      <ul class="gallery">
+        {projects.map((proj, i) => (
+          <li class="win reveal" data-group={proj.group} data-id={proj.id} style={`--d:${(i % 3) * 90}ms`}>
+            <button type="button" class="win-btn" data-open={proj.id} aria-haspopup="dialog">
+              <span class="win-art"><Poster project={proj} lang={lang} /></span>
+              <span class="win-cap">
+                <span class="win-title">{proj.title[L]}</span>
+                <span class="win-hook">{proj.hook[L]}</span>
+              </span>
+            </button>
+            <template data-tpl={proj.id}>
+              <h3 class="d-title">{proj.title[L]}</h3>
+              {proj.client && <p class="d-tag">{p.work.client[L]}</p>}
+              <p class="d-hook">{proj.hook[L]}</p>
+              <ul class="d-points">{proj.bullets[L].map((b) => <li>{b}</li>)}</ul>
+              <p class="d-stack">{proj.stack.map((s) => <span>{s}</span>)}</p>
+              <p class="d-links">{proj.links.map((l) => <a href={l.href} target="_blank" rel="noopener" dir="ltr">{l.label} <span aria-hidden="true">↗</span></a>)}</p>
+            </template>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="path" class="path">
+      <h2 class="path-title reveal">{p.path.title[L]}</h2>
+      <ol class="path-list">
+        {pathItems.map((it, i) => (
+          <li class="reveal" style={`--d:${i * 60}ms`}>
+            <span class="yrs">{it.years}</span>
+            <div>
+              <h3>{it.role} <span class="org">{it.org}</span></h3>
+              <p>{it.line}</p>
+            </div>
+          </li>
+        ))}
+        <li class="reveal edu">
+          <span class="yrs">2016 - 2020</span>
+          <div><h3>{p.path.education[L]}</h3></div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="stack" aria-label={p.stack.title[L]}>
+      <h2 class="visually-hidden">{p.stack.title[L]}</h2>
+      <div class="marquee" aria-hidden="true">
+        <div class="track">
+          {[0, 1].map(() => <span class="run">{stack.map((s) => <><b>{s}</b><i>◆</i></>)}</span>)}
+        </div>
+      </div>
+      <p class="visually-hidden">{stack.join(', ')}</p>
+    </section>
+
+    <section id="contact" class="contact">
+      <h2 class="reveal">{p.contact.title[L]}</h2>
+      <p class="sub reveal" style="--d:80ms">{p.contact.sub[L]}</p>
+      <div class="contact-row reveal" style="--d:160ms">
+        <a class="btn primary big" href={`mailto:${profile.email}`}>{p.contact.email[L]}</a>
+        <button class="btn" type="button" data-copy={profile.email} data-done={p.contact.copied[L]}>{p.contact.copy[L]}</button>
+      </div>
+      <p class="mail" dir="ltr">{profile.email}</p>
+      <ul class="socials reveal" style="--d:220ms">
+        {profile.links.map((l) => <li><a href={l.href} target="_blank" rel="noopener" dir="ltr">{l.label}</a></li>)}
+        <li><a href={url('/ar/')}>{p.contact.cvAr[L]}</a></li>
+        <li><a href={url('/en/')}>{p.contact.cvEn[L]}</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>{p.footer.made[L]}</p>
+    <p><a href="https://github.com/EngDawood/Dawood-resume" target="_blank" rel="noopener">{p.footer.source[L]}</a> · © 2026 {profile.name[L]}</p>
+  </footer>
+
+  <dialog class="sheet" id="project-dialog" aria-labelledby="dlg-title">
+    <div class="sheet-art"></div>
+    <div class="sheet-body"></div>
+    <button class="sheet-close" type="button" data-close aria-label={p.work.close[L]}>×</button>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    import { init } from '../../scripts/personal';
+    init();
+  </script>
+</body>
+</html>

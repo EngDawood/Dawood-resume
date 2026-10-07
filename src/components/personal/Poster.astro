@@ -1,0 +1,287 @@
+---
+// One stained-glass "window" per project. Same light model as the hero qamariya:
+// lamp behind the glass (moved by --px/--py on hover), panes multiply it, lattice = mask gaps.
+// Typography sits in front of the glass, set in Thmanyah.
+import { sector, arch, rng, GLASS, type Glass } from './geo';
+import { type Lang, type Project, live } from '../../data/resume';
+
+interface Props { project: Project; lang: Lang }
+const { project, lang } = Astro.props;
+const id = project.id;
+const W = 300, H = 400, CX = 150, CY = 150, R = 140, B = H - 8;
+type Pane = { d: string; c: Glass };
+const panes: Pane[] = [];
+const rect = (x: number, y: number, w: number, h: number) => `M${x} ${y}h${w}v${h}h${-w}Z`;
+const nf = (n: number) => n.toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US');
+const ar = lang === 'ar';
+const r = rng([...id].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7));
+const pick = <T,>(xs: T[]) => xs[Math.floor(r() * xs.length)];
+
+// circle-band polygon (for globe latitude bands)
+const band = (cx: number, cy: number, rad: number, y1: number, y2: number) => {
+  const pts: string[] = [];
+  const steps = 18;
+  for (let i = 0; i <= steps; i++) {
+    const y = y1 + ((y2 - y1) * i) / steps;
+    const dx = Math.sqrt(Math.max(0, rad * rad - (y - cy) ** 2));
+    pts.push(`${(cx + dx).toFixed(1)} ${y.toFixed(1)}`);
+  }
+  for (let i = steps; i >= 0; i--) {
+    const y = y1 + ((y2 - y1) * i) / steps;
+    const dx = Math.sqrt(Math.max(0, rad * rad - (y - cy) ** 2));
+    pts.push(`${(cx - dx).toFixed(1)} ${y.toFixed(1)}`);
+  }
+  return `M${pts.join('L')}Z`;
+};
+
+let accent: Glass = 'amber';
+let lattice = 4;
+const sources = ['arXiv', 'PubMed', 'PMC', 'Europe PMC', 'bioRxiv', 'medRxiv', 'Crossref', 'DBLP', 'OpenReview', 'HAL', 'Zenodo', 'OpenAIRE', 'DOAJ', 'IACR', 'zbMATH', 'ERIC', 'INSPIRE', 'Unpaywall'];
+const platforms = ['TikTok', 'Instagram', 'X', 'YouTube', 'Facebook', 'Threads', 'SoundCloud', 'Spotify', 'Pinterest', 'GitHub'];
+const words = ['بحث', 'رسالة', 'مجلة', 'أطروحة', 'دراسة', 'مقال', 'مؤتمر', 'ملخص', 'مرجع', 'فهرس', 'علوم', 'تاريخ', 'لغة', 'طب', 'فقه', 'أدب'];
+
+switch (id) {
+  case 'arabic-scholar': {
+    accent = 'emerald';
+    const cols: Glass[] = ['emerald', 'cobalt', 'clear', 'teal', 'emerald', 'clear', 'cobalt', 'teal', 'emerald'];
+    for (let i = 0; i < 9; i++) panes.push({ d: sector(CX, CY, 34, R, 180 + i * 20, 200 + i * 20), c: cols[i] });
+    panes.push({ d: sector(CX, CY, 0, 34, 180, 360), c: 'amber' });
+    // shelves of book spines
+    for (let row = 0; row < 4; row++) {
+      let x = 10;
+      const y = 150 + row * 61;
+      while (x < 290) {
+        const w = Math.min(290 - x, 10 + Math.floor(r() * 26));
+        panes.push({ d: rect(x, y, w, 61), c: pick(['emerald', 'cobalt', 'clear', 'teal', 'clear', 'amber']) });
+        x += w;
+      }
+    }
+    break;
+  }
+  case 'paper-search': {
+    accent = 'cobalt';
+    const n = 18;
+    for (let i = 0; i < n; i++) panes.push({ d: sector(CX, 368, 66, 470, 180 + (i * 180) / n, 180 + ((i + 1) * 180) / n), c: (['cobalt', 'clear', 'teal'] as Glass[])[i % 3] });
+    panes.push({ d: sector(CX, 368, 0, 66, 0, 359.9), c: 'amber' });
+    break;
+  }
+  case 'storyset': {
+    accent = 'ruby';
+    for (let i = 0; i < 9; i++) panes.push({ d: rect(10 + i * 31.2, 10, 31.2, 390), c: i % 2 ? 'clear' : 'teal' });
+    const sw: Glass[] = ['ruby', 'amber', 'emerald', 'cobalt', 'teal', 'ruby', 'amber', 'cobalt'];
+    for (let i = 0; i < 8; i++) panes.push({ d: sector(CX, 170, 26, 104, i * 45, i * 45 + 45), c: sw[i] });
+    panes.push({ d: sector(CX, 170, 0, 26, 0, 359.9), c: 'clear' });
+    break;
+  }
+  case 'mistral-ocr': {
+    accent = 'clear';
+    for (let y = 10; y < 400; y += 26) for (let x = 10; x < 290; x += 28) panes.push({ d: rect(x, y, 28, 26), c: pick(['cobalt', 'teal', 'cobalt']) });
+    panes.push({ d: rect(56, 84, 188, 236), c: 'clear' });
+    break;
+  }
+  case 'yemen-jobs': {
+    accent = 'cobalt';
+    lattice = 3;
+    for (let y = 10; y < 400; y += 20) for (let x = 10; x < 290; x += 20) panes.push({ d: rect(x, y, 20, 20), c: pick(['cobalt', 'cobalt', 'clear', 'teal', 'ruby', 'amber', 'cobalt']) });
+    break;
+  }
+  case 'video-caption': {
+    accent = 'ruby';
+    for (let i = 0; i < 6; i++) panes.push({ d: sector(CX, CY, 40, R, 180 + i * 30, 210 + i * 30), c: i % 2 ? 'amber' : 'ruby' });
+    panes.push({ d: sector(CX, CY, 0, 40, 180, 360), c: 'clear' });
+    panes.push({ d: rect(22, 160, 256, 144), c: 'teal' });
+    panes.push({ d: rect(10, 316, 280, 90), c: 'ruby' });
+    break;
+  }
+  case 'download-media': {
+    accent = 'amber';
+    for (let i = 0; i < 7; i++) panes.push({ d: rect(10, 10 + i * 56, 280, 56), c: i % 2 ? 'clear' : 'amber' });
+    const cs: Glass[] = ['ruby', 'amber', 'cobalt', 'emerald', 'teal'];
+    for (let i = 0; i < 10; i++) panes.push({ d: sector(CX, 210, 44, 118, i * 36 - 90, i * 36 - 54), c: cs[i % 5] });
+    panes.push({ d: sector(CX, 210, 0, 44, 0, 359.9), c: 'clear' });
+    break;
+  }
+  case 'rss-bridge': {
+    accent = 'emerald';
+    panes.push({ d: rect(10, 10, 280, 390), c: 'clear' });
+    const radii: [number, number, Glass][] = [[0, 58, 'amber'], [78, 138, 'emerald'], [158, 218, 'teal'], [238, 298, 'emerald'], [318, 378, 'cobalt']];
+    for (const [a, b, c] of radii) panes.push({ d: sector(14, B, a, b, 270, 360), c });
+    break;
+  }
+  case 'tamkeen': {
+    accent = 'teal';
+    panes.push({ d: `M10 10H290V392Z`, c: 'cobalt' });
+    panes.push({ d: `M10 10L290 392H10Z`, c: 'clear' });
+    const ds: [number, number, Glass][] = [[150, 175, 'amber'], [122, 203, 'teal'], [178, 203, 'teal'], [150, 231, 'amber']];
+    for (const [x, y, c] of ds) panes.push({ d: `M${x} ${y - 26}L${x + 26} ${y}L${x} ${y + 26}L${x - 26} ${y}Z`, c });
+    break;
+  }
+  case 'emdash-portfolio': {
+    accent = 'amber';
+    for (let y = 10; y < 400; y += 30) for (let x = 10; x < 290; x += 35) panes.push({ d: rect(x, y, 35, 30), c: 'cobalt' });
+    let k = 0;
+    for (let row = 0; row < 7; row++) for (let col = 0; col < 7; col++) {
+      if (k++ >= 46) continue;
+      panes.push({ d: rect(52 + col * 28, 118 + row * 28, 28, 28), c: pick(['amber', 'clear', 'amber', 'ruby', 'emerald']) });
+    }
+    break;
+  }
+  case 'yemen-map': {
+    accent = 'emerald';
+    for (let i = 0; i < 8; i++) panes.push({ d: sector(CX, CY, 0, 420, i * 45, i * 45 + 45), c: i % 2 ? 'cobalt' : 'teal' });
+    const gy = 196, gr = 112;
+    const bands: Glass[] = ['emerald', 'teal', 'emerald', 'clear', 'emerald', 'teal', 'emerald'];
+    for (let i = 0; i < 7; i++) panes.push({ d: band(CX, gy, gr, gy - gr + (i * 2 * gr) / 7, gy - gr + ((i + 1) * 2 * gr) / 7), c: bands[i] });
+    break;
+  }
+  case 'thmanyah': {
+    accent = 'amber';
+    const bs: Glass[] = ['amber', 'clear', 'amber', 'ruby', 'amber', 'clear', 'ruby'];
+    for (let i = 0; i < 7; i++) panes.push({ d: rect(10, 10 + i * 56, 280, 56), c: bs[i] });
+    for (let i = 0; i < 6; i++) panes.push({ d: sector(CX, CY, 60, R, 180 + i * 30, 210 + i * 30), c: i % 2 ? 'amber' : 'clear' });
+    panes.push({ d: sector(CX, CY, 0, 60, 180, 360), c: 'ruby' });
+    break;
+  }
+}
+
+const outline = arch(CX, CY, R, B);
+const k = `p-${id}`;
+// Yemen map arcs: from Yemen to a few diaspora cities
+const yemen = [178, 236];
+const cities = [[96, 150], [70, 210], [120, 112], [214, 140], [236, 196], [150, 276]];
+const fmt = (n: number) => n.toLocaleString('en-US');
+---
+<svg class={`poster poster-${id}`} viewBox={`0 0 ${W} ${H}`} aria-hidden="true" style={`--accent:${GLASS[accent]}`}>
+  <defs>
+    <clipPath id={`${k}-clip`}><path d={outline} /></clipPath>
+    <mask id={`${k}-mask`} maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
+      <rect width={W} height={H} fill="#000" />
+      <g fill="#fff">{panes.map((p) => <path d={p.d} />)}</g>
+      <g fill="none" stroke="#000" stroke-width={lattice} stroke-linejoin="round">{panes.map((p) => <path d={p.d} />)}</g>
+    </mask>
+    {id === 'mistral-ocr' && <filter id={`${k}-blur`}><feGaussianBlur stdDeviation="2.2" /></filter>}
+    {id === 'download-media' && <path id={`${k}-ring`} d="M150 76a134 134 0 1 1 -0.1 0" />}
+  </defs>
+
+  <g clip-path={`url(#${k}-clip)`}>
+    <rect class="pl-lattice" width={W} height={H} />
+    <g mask={`url(#${k}-mask)`}>
+      <rect class="pl-base" width={W} height={H} />
+      <g class="pl-lamp"><circle r="260" fill="url(#lamp-grad)" /></g>
+      <g class="pl-glass">{panes.map((p) => <path d={p.d} fill={GLASS[p.c]} />)}</g>
+      <rect width={W} height={H} filter="url(#grain)" class="pl-grain" />
+    </g>
+
+    <g class="pl-type">
+      {id === 'arabic-scholar' && (
+        <>
+          <rect x="10" y="236" width="280" height="160" class="shade" />
+          <text x="150" y="304" class="f-disp big" text-anchor="middle">{ar ? '٤ ملايين' : '4M+'}</text>
+          <text x="150" y="336" class="f-sans cap" text-anchor="middle">{ar ? 'سجل أكاديمي عربي' : 'Arabic academic records'}</text>
+          <text x="150" y="364" class="f-text tiny" text-anchor="middle" direction="rtl">{words.slice(0, 6).join(' · ')}</text>
+        </>
+      )}
+      {id === 'paper-search' && (
+        <>
+          {sources.map((s, i) => {
+            const a = 180 + ((i + 0.5) * 180) / 18;
+            const flip = a < 270;
+            const rr = 80;
+            const tx = CX + rr * Math.cos((a * Math.PI) / 180), ty = 368 + rr * Math.sin((a * Math.PI) / 180);
+            return <text x={tx.toFixed(1)} y={ty.toFixed(1)} dy="3" class="f-sans label ray" direction="ltr" text-anchor={flip ? 'end' : 'start'} transform={`rotate(${(flip ? a + 180 : a).toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)})`}>{s}</text>;
+          })}
+          <text x="150" y="384" class="f-disp big dark" text-anchor="middle">{ar ? '١٨' : '18'}</text>
+        </>
+      )}
+      {id === 'storyset' && (
+        <>
+          <rect x="10" y="300" width="280" height="100" class="shade" />
+          <text x="150" y="346" class="f-disp mid" text-anchor="middle">{ar ? 'أعد تلوينها' : 'Recolor it'}</text>
+          <text x="150" y="372" class="f-sans cap" text-anchor="middle">storyset · SVG · MCP</text>
+        </>
+      )}
+      {id === 'mistral-ocr' && (
+        <>
+          {(() => {
+            const lines = ['قال أهل اللغة إن الكتابة', 'صورة الكلام المنطوق، وإن', 'الخط لسان اليد، فإذا', 'استقام الخط استقام المعنى'];
+            return (
+              <>
+                <g filter={`url(#${k}-blur)`} class="ocr-blur">{lines.map((l, i) => <text x="236" y={128 + i * 34} class="f-text ocr-ink" text-anchor="start" direction="rtl">{l}</text>)}</g>
+                <g class="ocr-clean">{lines.map((l, i) => <text x="236" y={128 + i * 34} class="f-text ocr-ink" text-anchor="start" direction="rtl">{l}</text>)}</g>
+              </>
+            );
+          })()}
+          <rect x="56" y="84" width="4" height="236" class="scan" />
+          <text x="150" y="374" class="f-disp mid" text-anchor="middle">OCR</text>
+        </>
+      )}
+      {id === 'yemen-jobs' && (
+        <>
+          <rect x="10" y="196" width="280" height="200" class="shade" />
+          <text x="150" y="168" class="f-disp jumbo outline" text-anchor="middle" direction="rtl">وظائف</text>
+          <text x="150" y="292" class="f-disp big live" text-anchor="middle" data-live="subscribers">{nf(live.subscribers)}</text>
+          <text x="150" y="326" class="f-sans cap" text-anchor="middle">{ar ? 'مشترك في ‎@hr_yemen' : 'subscribers · @hr_yemen'}</text>
+        </>
+      )}
+      {id === 'video-caption' && (
+        <>
+          <g class="wave">{Array.from({ length: 23 }, (_, i) => {
+            const h = 14 + Math.abs(Math.sin(i * 1.7) * 46) + (i % 3) * 6;
+            return <rect x={34 + i * 10.4} y={232 - h / 2} width="5" height={h} rx="2.5" style={`--i:${i}`} />;
+          })}</g>
+          <rect x="40" y="326" width="220" height="34" rx="3" class="capbar" />
+          <text x="150" y="349" class="f-sans capt" text-anchor="middle" direction="rtl">الترجمة تظهر هنا</text>
+          <text x="150" y="386" class="f-sans tiny dim" text-anchor="middle">EN → AR · ffmpeg</text>
+        </>
+      )}
+      {id === 'download-media' && (
+        <>
+          <text class="f-sans label ring" direction="ltr"><textPath href={`#${k}-ring`} startOffset="0">{platforms.join('  ·  ')}  ·</textPath></text>
+          <circle cx="150" cy="210" r="40" class="disc" />
+          <text x="150" y="226" class="f-disp mid dark" text-anchor="middle">{ar ? '١٠' : '10'}</text>
+          <text x="150" y="372" class="f-sans cap" text-anchor="middle">{ar ? 'منصّات، رابط واحد' : 'platforms, one link'}</text>
+        </>
+      )}
+      {id === 'rss-bridge' && (
+        <>
+          <text x="272" y="112" class="f-disp big" text-anchor="end" direction="ltr">RSS</text>
+          {ar ? <text x="272" y="146" class="f-sans cap" text-anchor="start" direction="rtl">← إلى تيليجرام، بالعربية</text> : <text x="272" y="146" class="f-sans cap" text-anchor="end" direction="ltr">→ Telegram, in Arabic</text>}
+        </>
+      )}
+      {id === 'tamkeen' && (
+        <>
+          <text x="266" y="122" class="f-disp big" text-anchor="start" direction="rtl">تمكين</text>
+          <text x="32" y="330" class="f-disp mid" text-anchor="start" direction="ltr">Tamkeen</text>
+          {ar ? <text x="32" y="362" class="f-sans cap" direction="rtl" text-anchor="end">٩ صفحات × لغتين</text> : <text x="32" y="362" class="f-sans cap" direction="ltr" text-anchor="start">9 pages × 2 languages</text>}
+        </>
+      )}
+      {id === 'emdash-portfolio' && (
+        <>
+          <rect x="10" y="322" width="280" height="80" class="shade" />
+          <text x="150" y="98" class="f-disp big" text-anchor="middle">{ar ? '٤٦' : '46'}</text>
+          <text x="150" y="362" class="f-sans cap" text-anchor="middle">{ar ? 'أداة MCP تدير الموقع' : 'MCP tools run this site'}</text>
+        </>
+      )}
+      {id === 'yemen-map' && (
+        <>
+          <g class="arcs">{cities.map(([x, y], i) => {
+            const mx = (yemen[0] + x) / 2, my = Math.min(yemen[1], y) - 46;
+            return <path d={`M${yemen[0]} ${yemen[1]}Q${mx} ${my} ${x} ${y}`} style={`--i:${i}`} pathLength="1" />;
+          })}</g>
+          <circle cx={yemen[0]} cy={yemen[1]} r="5" class="pin" />
+          {cities.map(([x, y]) => <circle cx={x} cy={y} r="2.6" class="dot" />)}
+          <text x="150" y="364" class="f-disp mid" text-anchor="middle" direction="rtl">الغربة</text>
+        </>
+      )}
+      {id === 'thmanyah' && (
+        <>
+          <rect x="10" y="172" width="280" height="230" class="shade" />
+          {[300, 400, 500, 700, 900].map((w, i) => (
+            <text x="150" y={206 + i * 40} class="f-disp specimen" text-anchor="middle" direction="rtl" style={`font-weight:${w};font-size:${22 + i * 3.5}px`}>ثمانية</text>
+          ))}
+        </>
+      )}
+    </g>
+  </g>
+  <path d={outline} class="pl-frame" />
+</svg>

@@ -1,0 +1,12 @@
+{
+  "updatedAt": "2026-10-07",
+  "hrYemenSubscribers": {
+    "value": 5672,
+    "source": "https://t.me/hr_yemen"
+  },
+  "thmanyahNpm": {
+    "value": 2389,
+    "period": "2026-09-05..2026-10-04",
+    "source": "https://api.npmjs.org/downloads/point/last-month/@dawod/thmanyah-font-web"
+  }
+}
