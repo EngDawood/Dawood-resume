@@ -9,8 +9,11 @@ type Story = { title: string; style: string; preview_url: string };
 
 const PAPERS = new McpClient('https://paper-search-mcp.engdawood.com/mcp', false);
 const STORY = new McpClient('https://storyset-mcp.engdawood.com/mcp', true);
-const HOSTS = { papers: 'paper-search-mcp.engdawood.com', storyset: 'storyset-mcp.engdawood.com' };
-const REPOS = { papers: 'https://github.com/EngDawood/paper-search-mcp-server', storyset: 'https://github.com/EngDawood/MCP-STORYSET' };
+const JOBS = new McpClient('https://jobs.engdawood.com/mcp', false);
+type Tab = 'papers' | 'storyset' | 'jobs' | 'downloader';
+type Job = { title: string; company?: string | null; location?: string | null; deadline?: string | null; source?: string; source_url?: string | null };
+const HOSTS: Record<Tab, string> = { papers: 'paper-search-mcp.engdawood.com', storyset: 'storyset-mcp.engdawood.com', jobs: 'jobs.engdawood.com', downloader: 'dl.engdawood.com' };
+const REPOS: Record<Tab, string> = { papers: 'https://github.com/EngDawood/paper-search-mcp-server', storyset: 'https://github.com/EngDawood/MCP-STORYSET', jobs: 'https://t.me/hr_yemen', downloader: 'https://github.com/EngDawood/download-media' };
 
 // Sources disagree on author shape: OpenReview sometimes sends {fullname, username} objects.
 const authorName = (a: Author) => (typeof a === 'string' ? a : a?.fullname || a?.name || a?.username?.replace(/^~|\d+$/g, '').replace(/_/g, ' ') || '');
@@ -49,11 +52,13 @@ export function initConsole() {
       x.tabIndex = on ? 0 : -1;
       root.querySelector<HTMLElement>(`#${x.getAttribute('aria-controls')}`)!.hidden = !on;
     }
-    const key = t.dataset.tab as 'papers' | 'storyset';
+    const key = t.dataset.tab as Tab;
     host.textContent = HOSTS[key];
     repo.href = REPOS[key];
     if (focus) t.focus();
     if (key === 'storyset' && !storyLoaded) { storyLoaded = true; runStory(storyInput.value); }
+    if (key === 'jobs' && !jobsLoaded) { jobsLoaded = true; runJobs(jobsInput.value); }
+    if (key === 'downloader') setStatus('idle', S.dlNote);
   };
   tabs.forEach((t, i) => {
     t.addEventListener('click', () => select(t));
@@ -198,6 +203,42 @@ export function initConsole() {
       setStatus('fail', S.recolorFailed);
     } finally { busyStory = false; }
   }));
+
+  /* ---------- jobs ---------- */
+  const jForm = root.querySelector<HTMLFormElement>('[data-form="jobs"]')!;
+  const jobsInput = jForm.querySelector<HTMLInputElement>('input')!;
+  const jReq = root.querySelector<HTMLElement>('#panel-jobs [data-req]')!;
+  const jResults = root.querySelector<HTMLElement>('[data-jobs-results]')!;
+  const jTotal = root.querySelector<HTMLElement>('[data-jobs-total]')!;
+  let jobsLoaded = false, busyJobs = false;
+
+  async function runJobs(query: string) {
+    query = query.trim();
+    if (!query || busyJobs) return;
+    busyJobs = true;
+    const args = { query, limit: 6 };
+    jReq.innerHTML = highlightJson(JOBS.describe('search_jobs', args));
+    root.querySelector('#panel-jobs')!.classList.add('busy');
+    setStatus('busy', S.loading);
+    try {
+      const { result, ms } = await JOBS.call<{ jobs: Job[]; meta?: { total?: number } }>('search_jobs', args);
+      const jobs = result.jobs || [];
+      jTotal.textContent = (result.meta?.total ?? jobs.length).toLocaleString(document.documentElement.lang === 'ar' ? 'ar-EG' : 'en-US');
+      if (!jobs.length) jResults.replaceChildren(el('li', { className: 'r-empty' }, S.empty));
+      else jResults.replaceChildren(...jobs.map((j) => el('li', {},
+        el('a', { className: 'r-title', href: j.source_url || '#', target: '_blank', rel: 'noopener', dir: 'auto' }, j.title),
+        el('span', { className: 'r-meta', dir: 'auto' }, [j.company, j.location, j.deadline && `${S.deadline} ${j.deadline}`].filter(Boolean).join(' · ')),
+        el('span', { className: 'r-src', dir: 'ltr' }, j.source || ''))));
+      setStatus('ok', `${S.live} ${fmtSec(ms)}`);
+    } catch {
+      setStatus('fail', S.failed);
+    } finally {
+      busyJobs = false;
+      root.querySelector('#panel-jobs')!.classList.remove('busy');
+    }
+  }
+  jForm.addEventListener('submit', (e) => { e.preventDefault(); runJobs(jobsInput.value); });
+  jForm.querySelectorAll<HTMLButtonElement>('[data-q]').forEach((b) => b.addEventListener('click', () => { jobsInput.value = b.dataset.q!; runJobs(b.dataset.q!); }));
 
   /* ---------- first live call when the console comes into view ---------- */
   setStatus('idle', `${S.saved} ${saved}`);

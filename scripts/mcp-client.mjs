@@ -1,7 +1,7 @@
 // Minimal MCP client over Streamable HTTP (JSON-RPC). Shared by the build scripts.
 // Handles both plain JSON responses and SSE ("data: ...") responses, with or without sessions.
-export async function mcpSession(url) {
-  const headers = { 'content-type': 'application/json', accept: 'application/json, text/event-stream' };
+export async function mcpSession(url, extraHeaders = {}) {
+  const headers = { 'content-type': 'application/json', accept: 'application/json, text/event-stream', ...extraHeaders };
   const post = async (body, extra = {}) => {
     const res = await fetch(url, { method: 'POST', headers: { ...headers, ...extra }, body: JSON.stringify(body), signal: AbortSignal.timeout(30000) });
     if (!res.ok && res.status !== 202) throw new Error(`${url} -> HTTP ${res.status}`);
