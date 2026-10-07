@@ -20,7 +20,7 @@ export const live = {
 };
 
 export const profile = {
-  name: { ar: 'داود صالح', en: 'Dawood Saleh' } as T,
+  name: { ar: 'داوود صالح أحمد هرمس', en: 'Dawood Saleh' } as T,
   role: {
     ar: 'مهندس برمجيات · أدوات الذكاء الاصطناعي وخوادم MCP · مطوّر واجهات أمامية',
     en: 'Software Engineer · AI Tooling & MCP Servers · Front-End Developer',

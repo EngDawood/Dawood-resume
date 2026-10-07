@@ -2,9 +2,9 @@ import type { T } from './resume';
 
 // Copy for the personal (interactive) site. Kept short on purpose: the resume carries the detail.
 export const p = {
-  title: { ar: 'داود صالح · نوافذ من ضوء', en: 'Dawood Saleh · Windows of light' } as T,
+  title: { ar: 'داوود صالح أحمد هرمس · نوافذ من ضوء', en: 'Dawood Saleh · Windows of light' } as T,
   description: {
-    ar: 'داود صالح، مهندس برمجيات من صنعاء: خوادم MCP وأدوات ذكاء اصطناعي وواجهات عربية. كل نافذة هنا مشروع بنيته.',
+    ar: 'داوود صالح أحمد هرمس، مهندس برمجيات من صنعاء: خوادم MCP وأدوات ذكاء اصطناعي وواجهات عربية. كل نافذة هنا مشروع بنيته.',
     en: "Dawood Saleh, a software engineer from Sana'a: MCP servers, AI tooling and Arabic interfaces. Every window here is something I built.",
   } as T,
   nav: {

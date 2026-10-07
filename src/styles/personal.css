@@ -36,7 +36,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body.per {
   margin: 0;
@@ -125,7 +125,8 @@ main > section > * { max-width: 1240px; margin-inline: auto; }
   margin: 0; font-weight: 900; letter-spacing: -.02em;
   font-size: clamp(64px, 9.4vw, 150px); line-height: 1.02;
 }
-html[lang="ar"] .name { line-height: 1.22; letter-spacing: 0; font-size: clamp(64px, 10vw, 160px); }
+html[lang="ar"] .name { line-height: 1.24; letter-spacing: 0; font-size: clamp(54px, 7.6vw, 122px); }
+.name .nl { display: block; white-space: nowrap; }
 .line { margin: 26px 0 36px; max-width: 30ch; font-size: clamp(19px, 1.7vw, 23px); line-height: 1.6; color: var(--muted); }
 .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
 

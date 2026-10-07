@@ -102,7 +102,9 @@ function pick(i: number) {
     <section class="hero" data-hero>
       <div class="hero-text">
         <p class="kicker reveal">{p.hero.kicker[L]}</p>
-        <h1 class="name reveal" style="--d:80ms">{profile.name[L]}</h1>
+        <h1 class="name reveal" style="--d:80ms">{ar
+          ? (() => { const w = profile.name.ar.split(' '); return <><span class="nl">{w.slice(0, 2).join(' ')}</span> <span class="nl">{w.slice(2).join(' ')}</span></>; })()
+          : profile.name[L]}</h1>
         <p class="line reveal" style="--d:160ms">{p.hero.line[L]}</p>
         <div class="ctas reveal" style="--d:240ms">
           <a class="btn primary" href="#work">{p.hero.cta[L]}</a>
