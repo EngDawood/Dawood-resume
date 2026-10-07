@@ -1,0 +1,116 @@
+---
+// Live MCP console. Rendered at build time with the last real responses (src/data/demo.json),
+// then src/scripts/console.ts replaces them with live calls from the visitor's browser.
+import type { Lang } from '../../data/resume';
+import { p } from '../../data/personal';
+import demo from '../../data/demo.json';
+import { highlightJson, interleave } from '../../scripts/highlight';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = lang;
+const c = p.console;
+
+const PAPER_SOURCES = ['arxiv', 'pubmed', 'crossref', 'europepmc', 'openalex', 'openreview'];
+const paperArgs = { query: demo.papers.query, sources: PAPER_SOURCES, max_results_per_source: 3 };
+const paperReq = { jsonrpc: '2.0', method: 'tools/call', params: { name: 'search_papers', arguments: paperArgs } };
+const storyReq = { jsonrpc: '2.0', method: 'tools/call', params: { name: 'search', arguments: { query: demo.storyset.query, limit: 6 } } };
+const maxMs = Math.max(...demo.papers.sources.map((s) => s.ms));
+const papers = interleave(demo.papers.papers, 6);
+const paperChips = ['Model Context Protocol', 'Large language models', 'Speech recognition'];
+const storyChips = ['teamwork', 'data analysis', 'travel', 'education'];
+const swatches = ['#2b59ff', '#12a46b', '#e0453a', '#f2a93b', '#1d1f24'];
+const strings = Object.fromEntries(Object.entries(c).map(([k, v]) => [k, typeof v === 'object' && 'ar' in v ? (v as Record<Lang, string>)[L] : undefined]).filter(([, v]) => v));
+---
+<section class="console" data-console data-strings={JSON.stringify(strings)} data-saved={demo.updatedAt} data-sources={JSON.stringify(PAPER_SOURCES)} aria-labelledby="console-title">
+  <header class="c-top">
+    <h2 id="console-title" class="c-title">{c.title[L]}</h2>
+    <p class="c-sub">{c.sub[L]}</p>
+  </header>
+
+  <div class="c-box">
+    <div class="c-bar">
+      <div class="c-tabs" role="tablist" aria-label={c.title[L]}>
+        <button type="button" role="tab" id="tab-papers" aria-controls="panel-papers" aria-selected="true" data-tab="papers">{c.tabs.papers[L]}</button>
+        <button type="button" role="tab" id="tab-storyset" aria-controls="panel-storyset" aria-selected="false" tabindex="-1" data-tab="storyset">{c.tabs.storyset[L]}</button>
+      </div>
+      <span class="c-host" dir="ltr"><span class="c-dot" data-dot aria-hidden="true"></span><span data-host>paper-search-mcp.engdawood.com</span></span>
+    </div>
+
+    <!-- papers -->
+    <div class="c-panel" id="panel-papers" role="tabpanel" aria-labelledby="tab-papers" data-panel="papers">
+      <form class="c-form" data-form="papers">
+        <label class="c-label" for="q-papers">{c.queryPapers[L]}</label>
+        <div class="c-row">
+          <input id="q-papers" name="q" dir="ltr" autocomplete="off" spellcheck="false" maxlength="120" required value={demo.papers.query} />
+          <button class="c-run" type="submit">{c.run[L]}</button>
+        </div>
+        <div class="c-chips">{paperChips.map((q) => <button type="button" data-q={q} dir="ltr">{q}</button>)}</div>
+      </form>
+      <div class="c-io">
+        <div class="c-block">
+          <p class="c-cap">{c.request[L]}</p>
+          <pre class="c-code" dir="ltr"><code data-req set:html={highlightJson(paperReq)} /></pre>
+        </div>
+        <div class="c-block">
+          <p class="c-cap">{c.sources[L]}</p>
+          <ul class="c-sources" dir="ltr" data-sources-list>
+            {demo.papers.sources.map((s) => (
+              <li class:list={[s.error && 'err']} style={`--w:${Math.max(4, (s.ms / maxMs) * 100).toFixed(1)}%`}>
+                <span class="s-name">{s.source}</span><span class="s-bar"><i></i></span><span class="s-ms">{s.ms} ms</span><span class="s-n">{s.count}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p class="c-cap">{c.results[L]}</p>
+      <ol class="c-results" data-results aria-live="polite">
+        {papers.map((r) => (
+          <li>
+            <a class="r-title" href={r.url} target="_blank" rel="noopener" dir="ltr">{r.title}</a>
+            <span class="r-meta" dir="ltr">{r.authors.join(', ')}{r.year && ` · ${r.year}`}</span>
+            <span class="r-src" dir="ltr">{r.source}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <!-- storyset -->
+    <div class="c-panel" id="panel-storyset" role="tabpanel" aria-labelledby="tab-storyset" data-panel="storyset" hidden>
+      <form class="c-form" data-form="storyset">
+        <label class="c-label" for="q-story">{c.queryStory[L]}</label>
+        <div class="c-row">
+          <input id="q-story" name="q" dir="ltr" autocomplete="off" spellcheck="false" maxlength="60" required value={demo.storyset.query} />
+          <button class="c-run" type="submit">{c.run[L]}</button>
+        </div>
+        <div class="c-chips">{storyChips.map((q) => <button type="button" data-q={q} dir="ltr">{q}</button>)}</div>
+      </form>
+      <div class="c-block">
+        <p class="c-cap">{c.request[L]}</p>
+        <pre class="c-code" dir="ltr"><code data-req set:html={highlightJson(storyReq)} /></pre>
+      </div>
+      <p class="c-cap">{c.pick[L]}</p>
+      <div class="c-story">
+        <ul class="c-grid" data-grid>
+          {demo.storyset.results.map((r, i) => (
+            <li><button type="button" class:list={['c-thumb', i === 0 && 'on']} data-src={r.preview_url} data-title={r.title} aria-pressed={i === 0 ? 'true' : 'false'}>
+              <img src={r.preview_url} alt={`${r.title} (${r.style})`} loading="lazy" width="160" height="120" />
+            </button></li>
+          ))}
+        </ul>
+        <div class="c-stage">
+          <img data-big src={demo.storyset.results[0]?.preview_url} alt={demo.storyset.results[0]?.title} width="480" height="360" />
+          <div class="c-swatches" role="group" aria-label={c.swatches[L]}>
+            <span class="c-cap">{c.swatches[L]}</span>
+            {swatches.map((hex) => <button type="button" class="sw" data-color={hex} style={`--c:${hex}`} aria-label={hex}></button>)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="c-foot">
+      <span class="c-status" data-status role="status">{c.saved[L]} {demo.updatedAt}</span>
+      <a class="c-src" data-repo href="https://github.com/EngDawood/paper-search-mcp-server" target="_blank" rel="noopener">{c.source[L]} ↗</a>
+    </footer>
+  </div>
+</section>

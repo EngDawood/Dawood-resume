@@ -4,15 +4,15 @@ import { chromium } from 'playwright';
 const out = new URL('../public/og', import.meta.url).pathname;
 const b = await chromium.launch();
 for (const lang of ['ar', 'en']) {
-  const p = await b.newPage({ viewport: { width: 1200, height: 630 }, reducedMotion: 'reduce' });
+  const p = await b.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1, reducedMotion: 'reduce', colorScheme: 'light' });
   await p.goto(`http://localhost:4321/personal/${lang}/`, { waitUntil: 'networkidle' });
   await p.evaluate(() => document.fonts.ready);
-  await p.addStyleTag({ content: `.nav,.caption,.ctas,.skip{display:none!important}
-    .hero{padding-top:40px!important;padding-bottom:0!important;min-height:630px!important;grid-template-columns:1.15fr .85fr!important}
-    .qam{--lx:.62!important;--ly:.26!important;width:330px!important}
-    .qam-svg{max-height:560px!important}.name{font-size:118px!important}html[lang=ar] .name{font-size:92px!important}` });
-  await p.evaluate(() => { const f = document.querySelector('[data-qam]'); f.style.setProperty('--lx', '.62'); f.style.setProperty('--ly', '.26'); });
-  await p.waitForTimeout(500);
+  await p.waitForTimeout(3500);
+  await p.addStyleTag({ content: `.nav,.ctas,.c-top,.c-panel .c-form,.c-io,.c-foot{display:none!important}
+    .hero{min-height:630px!important;padding:44px 56px!important;grid-template-columns:1fr 1fr!important;gap:44px!important}
+    .c-results{max-height:none!important}.c-panel{padding-top:14px!important}
+    .name{font-size:${lang === "ar" ? 74 : 70}px!important}.line{font-size:20px!important;margin-bottom:0!important}` });
+  await p.waitForTimeout(400);
   await p.screenshot({ path: `${out}/personal-${lang}.png` });
   await p.screenshot({ path: `${out}/cv-${lang}.png` });
   await p.close();

@@ -17,19 +17,22 @@ For a job application that asks for an English CV, send `https://resume.engdawoo
 
 Single column, real text, semantic headings, links printed as readable URLs, set in Arial. No animation, no mode switch: the language comes from the URL only.
 
-## Personal site: "Qamariya"
+## Personal site: a live MCP console
 
-Built around the qamariya, the stained-glass arched window of Sana'a houses. Every image is drawn in code and typeset in [Thmanyah](https://font.thmanyah.com) (loaded from the CDN of [`@dawod/thmanyah-font-web`](https://www.npmjs.com/package/@dawod/thmanyah-font-web), never re-hosted).
+The hero is a working console that calls Dawood's public MCP servers straight from the visitor's browser:
 
-- **Light model:** a lamp (a radial gradient moved by CSS variables) sits behind the glass. Coloured panes use `mix-blend-mode: multiply`, so they filter the light the way real stained glass does. The plaster lattice is whatever the pane mask leaves uncovered.
-- **Hero:** the outer ring of the window has one pane per project. Hover shows the name, click opens it.
-- **Twelve windows:** one poster per project (`src/components/personal/Poster.astro`). Hovering lights the window from the cursor.
-- **Day / night:** night is the window seen from the street (dark lattice, lamp-lit glass); day is seen from inside (white gypsum, sunlit glass).
-- Respects `prefers-reduced-motion`. No JS framework; the interaction script is `src/scripts/personal.ts`.
+- **Search papers:** `search_papers` on [paper-search-mcp.engdawood.com](https://github.com/EngDawood/paper-search-mcp-server), showing the exact JSON-RPC request, each source's real response time and the results.
+- **Storyset illustrations:** `search`, then `extract_palette` + `recolor_svg` on [storyset-mcp.engdawood.com](https://github.com/EngDawood/MCP-STORYSET) to recolor an illustration live.
+
+`src/scripts/mcp.ts` is a small Streamable HTTP client (works with stateless and session servers). The page is first rendered with the last real responses (`src/data/demo.json`, captured by `scripts/fetch-demo.mjs` at build time), so the console is never empty and falls back gracefully if a server is unreachable.
+
+Below it: live numbers, projects as cards with a function-style signature line (real data or screenshots of the live sites in `public/shots/`), experience, technologies and contact. Typeset in [Thmanyah](https://font.thmanyah.com) from the CDN of [`@dawod/thmanyah-font-web`](https://www.npmjs.com/package/@dawod/thmanyah-font-web) (never re-hosted). Follows the system light/dark preference with a toggle, and respects `prefers-reduced-motion`.
+
+An earlier art-direction (a Sana'a stained-glass "qamariya") is kept on the `design/qamariya` branch.
 
 ## Live numbers
 
-`scripts/fetch-stats.mjs` runs before every build and writes `src/data/stats.json`:
+`scripts/fetch-stats.mjs` and `scripts/fetch-demo.mjs` run before every build. The first writes `src/data/stats.json`:
 
 - Telegram subscribers of `@hr_yemen` (read from `t.me/hr_yemen`)
 - Monthly npm downloads of `@dawod/thmanyah-font-web`

@@ -1,0 +1,205 @@
+{
+  "papers": {
+    "query": "Arabic natural language processing",
+    "ms": 530,
+    "sources": [
+      {
+        "source": "openalex",
+        "count": 3,
+        "ms": 20
+      },
+      {
+        "source": "europepmc",
+        "count": 3,
+        "ms": 21
+      },
+      {
+        "source": "arxiv",
+        "count": 3,
+        "ms": 21
+      },
+      {
+        "source": "crossref",
+        "count": 3,
+        "ms": 21
+      },
+      {
+        "source": "pubmed",
+        "count": 3,
+        "ms": 21
+      },
+      {
+        "source": "openreview",
+        "count": 3,
+        "ms": 107
+      }
+    ],
+    "papers": [
+      {
+        "title": "SinaTools: Open Source Toolkit for Arabic Natural Language Processing",
+        "authors": [
+          "Tymaa Hammouda",
+          "Mustafa Jarrar",
+          "Mohammed Khalilia"
+        ],
+        "year": "2024",
+        "source": "arxiv",
+        "url": "https://arxiv.org/abs/2411.01523v1"
+      },
+      {
+        "title": "A Rhythm-Aware Phrase Insertion for Classical Arabic Poetry Composition",
+        "authors": [
+          "Mohamad Elzohbi",
+          "Richard Zhao"
+        ],
+        "year": "2025",
+        "source": "arxiv",
+        "url": "https://arxiv.org/abs/2509.18514v1"
+      },
+      {
+        "title": "A Comprehensive Analysis of Arabic Natural Language Processing Research: Trends, Topic Evolution, and Research Gaps -- A Bibliometric and Topic-Based Study",
+        "authors": [
+          "Mullosharaf K. Arabov"
+        ],
+        "year": "2026",
+        "source": "arxiv",
+        "url": "https://arxiv.org/abs/2608.23421v2"
+      },
+      {
+        "title": "Enhancing semantic question similarity in Arabic using hybrid models and knowledge graph alignment.",
+        "authors": [
+          "Ammar Al-Edhari",
+          "Mohsen Kahani"
+        ],
+        "year": "2026",
+        "source": "pubmed",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/42757037/"
+      },
+      {
+        "title": "Benchmarking retrieval augmented generation LLMs for Arabic noise robustness.",
+        "authors": [
+          "Saleh Almohaimeed",
+          "Abdulrahman Alabduljabbar",
+          "Mousa Jari"
+        ],
+        "year": "2026",
+        "source": "pubmed",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/42676370/"
+      },
+      {
+        "title": "AryWiki-Instruct: A high-fidelity instruction tuning dataset for Moroccan Arabic (Darija).",
+        "authors": [
+          "Safouane Boudakkou",
+          "Abdelaaziz El Hibaoui"
+        ],
+        "year": "2026",
+        "source": "pubmed",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/42633346/"
+      },
+      {
+        "title": "Natural Language Processing for Dialectical Arabic: A Survey",
+        "authors": [
+          "Abdulhadi Shoufan",
+          "Sumaya Alameri"
+        ],
+        "year": "2015",
+        "source": "crossref",
+        "url": "https://doi.org/10.18653/v1/w15-3205"
+      },
+      {
+        "title": "Proceedings of the Fourth Arabic Natural Language Processing Workshop",
+        "authors": [],
+        "year": "2019",
+        "source": "crossref",
+        "url": "https://doi.org/10.18653/v1/w19-46"
+      },
+      {
+        "title": "Proceedings of The Second Arabic Natural Language Processing Conference",
+        "authors": [],
+        "year": "2024",
+        "source": "crossref",
+        "url": "https://doi.org/10.18653/v1/2024.arabicnlp-1"
+      },
+      {
+        "title": "Editorial: Emerging techniques in Arabic natural language processing.",
+        "authors": [
+          "Abudalfa S",
+          "Saad M",
+          "El-Beltagy S"
+        ],
+        "year": "2025",
+        "source": "europepmc",
+        "url": "https://europepmc.org/article/MED/41280881"
+      },
+      {
+        "title": "Legal case documents: A comprehensive dataset for Arabic natural language processing research and applications.",
+        "authors": [
+          "Zarbah S",
+          "Wali A",
+          "Alahmadi D"
+        ],
+        "year": "2026",
+        "source": "europepmc",
+        "url": "https://europepmc.org/article/MED/41631264"
+      },
+      {
+        "title": "A Scoping Review of Arabic Natural Language Processing for Mental Health.",
+        "authors": [
+          "Alasmari A"
+        ],
+        "year": "2025",
+        "source": "europepmc",
+        "url": "https://europepmc.org/article/MED/40361742"
+      }
+    ]
+  },
+  "storyset": {
+    "query": "developer",
+    "ms": 859,
+    "results": [
+      {
+        "title": "Developer activity",
+        "slug": "developer-activity",
+        "style": "rafiki",
+        "preview_url": "https://stories.freepiklabs.com/storage/11961/Developer-activity+_Freepik_copy_copy_Mesa-de-trabajo-1.svg",
+        "page_url": "https://storyset.com/illustration/developer-activity/rafiki"
+      },
+      {
+        "title": "Developer activity",
+        "slug": "developer-activity",
+        "style": "bro",
+        "preview_url": "https://stories.freepiklabs.com/storage/16408/developer-activity_Mesa-de-trabajo-1.svg",
+        "page_url": "https://storyset.com/illustration/developer-activity/bro"
+      },
+      {
+        "title": "Developer activity",
+        "slug": "developer-activity",
+        "style": "amico",
+        "preview_url": "https://stories.freepiklabs.com/storage/6269/Developer-Activity_Mesa-de-trabajo-1.svg",
+        "page_url": "https://storyset.com/illustration/developer-activity/amico"
+      },
+      {
+        "title": "Developer activity",
+        "slug": "developer-activity",
+        "style": "pana",
+        "preview_url": "https://stories.freepiklabs.com/storage/6249/Developer-activity-(1)-01.svg",
+        "page_url": "https://storyset.com/illustration/developer-activity/pana"
+      },
+      {
+        "title": "Developer activity",
+        "slug": "developer-activity",
+        "style": "cuate",
+        "preview_url": "https://stories.freepiklabs.com/storage/30149/Developer-activity_Mesa-de-trabajo-1.svg",
+        "page_url": "https://storyset.com/illustration/developer-activity/cuate"
+      },
+      {
+        "title": "Programmer",
+        "slug": "programmer",
+        "style": "rafiki",
+        "preview_url": "https://stories.freepiklabs.com/storage/31191/Programmer-rafiki_Artboard-1.svg",
+        "page_url": "https://storyset.com/illustration/programmer/rafiki"
+      }
+    ]
+  },
+  "updatedAt": "2026-10-07"
+}

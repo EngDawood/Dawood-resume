@@ -1,9 +1,9 @@
 ---
 import { type Lang, profile, projects, experience, live } from '../../data/resume';
-import { p, stack } from '../../data/personal';
+import { p, signatures, cardVisual, cardOrder, tech } from '../../data/personal';
+import demo from '../../data/demo.json';
 import { url, dirOf, other } from '../../lib';
-import Qamariya from './Qamariya.astro';
-import Poster from './Poster.astro';
+import Console from './Console.astro';
 import '../../styles/personal.css';
 
 interface Props { lang: Lang }
@@ -20,24 +20,17 @@ const numbers = [
   { value: 4, label: p.numbers.mcp[L] },
   { value: 18, label: p.numbers.sources[L] },
 ];
-const words = p.statement[L].split(' ');
 const groups = ['all', 'ai', 'bots', 'web'] as const;
+const cards = cardOrder.map((id) => projects.find((x) => x.id === id)!);
+const liveIds = new Set(['paper-search', 'storyset']);
+const shotAlt = (title: string) => (ar ? `لقطة شاشة من ${title}` : `Screenshot of ${title}`);
 
-const pathItems = [
-  { years: ar ? '2023 - الآن' : '2023 - now', ...pick(0) },
-  { years: '2022 - 2023', ...pick(1) },
-  { years: ar ? '2020 - الآن' : '2020 - now', ...pick(2) },
-  { years: ar ? '2020 - الآن' : '2020 - now', ...pick(3) },
-  { years: '2021', ...pick(4) },
-  { years: '2018 - 2019', ...pick(5) },
-];
-function pick(i: number) {
-  const j = experience[i];
-  return { role: j.role[L], org: j.org[L], line: j.bullets[L][0] };
-}
+const years = [ar ? '2023 - الآن' : '2023 - now', '2022 - 2023', ar ? '2020 - الآن' : '2020 - now', ar ? '2020 - الآن' : '2020 - now', '2021', '2018 - 2019'];
+const pathItems = experience.map((j, i) => ({ years: years[i], role: j.role[L], org: j.org[L], line: j.bullets[L][0] }));
+const nameWords = profile.name[L].split(' ');
 ---
 <!doctype html>
-<html lang={lang} dir={dirOf(lang)} data-theme="night">
+<html lang={lang} dir={dirOf(lang)}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,37 +45,27 @@ function pick(i: number) {
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={new URL(url(`/og/personal-${lang}.png`), site).href} />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#0c0d11" />
   <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://paper-search-mcp.engdawood.com" crossorigin />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@dawod/thmanyah-font-web/index.css" />
   <script is:inline>
-    document.documentElement.classList.add('js');
-    try { const t = localStorage.getItem('dr-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      var t = null;
+      try { t = localStorage.getItem('dr-theme'); } catch (e) {}
+      d.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    })();
   </script>
 </head>
 <body class="per">
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-      <radialGradient id="lamp-grad">
-        <stop offset="0" stop-color="#fffaf0" />
-        <stop offset=".25" stop-color="#ffdfa0" />
-        <stop offset=".6" stop-color="#d98a3a" stop-opacity=".45" />
-        <stop offset="1" stop-color="#d98a3a" stop-opacity="0" />
-      </radialGradient>
-      <filter id="grain" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="3" />
-        <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .2 0" />
-      </filter>
-    </defs>
-  </svg>
-
   <a class="skip" href="#work">{p.nav.work[L]}</a>
 
   <header class="nav">
-    <a class="brand" href={url(`/personal/${lang}/`)} aria-label={profile.name[L]}>
-      <svg viewBox="0 0 40 48" aria-hidden="true"><path d="M4 46V20a16 16 0 0 1 32 0v26z" /><path d="M20 4v42M4 22h32" /></svg>
-      <span>{profile.name[L]}</span>
+    <a class="brand" href={url(`/personal/${lang}/`)}>
+      <span class="mark" aria-hidden="true">{ar ? 'د' : 'D'}</span>
+      <span class="brand-name">{profile.name[L]}</span>
     </a>
     <nav class="nav-links" aria-label={ar ? 'الأقسام' : 'Sections'}>
       <a href="#work">{p.nav.work[L]}</a>
@@ -91,29 +74,29 @@ function pick(i: number) {
     </nav>
     <div class="nav-tools">
       <a class="chip" href={url(`/personal/${other(lang)}/`)} hreflang={other(lang)} lang={other(lang)}>{p.nav.other[L]}</a>
-      <button class="chip theme" type="button" data-theme-toggle data-day={p.nav.day[L]} data-night={p.nav.night[L]} aria-label={ar ? 'تبديل الوضع الفاتح والداكن' : 'Toggle light and dark mode'}>
-        <span class="sun" aria-hidden="true"></span><span class="theme-label">{p.nav.day[L]}</span>
+      <button class="chip" type="button" data-theme-toggle data-light={p.nav.day[L]} data-dark={p.nav.night[L]} aria-label={ar ? 'تبديل الوضع الفاتح والداكن' : 'Toggle light and dark mode'}>
+        <span class="tdot" aria-hidden="true"></span><span class="theme-label"></span>
       </button>
       <a class="chip solid" href={url(`/${lang}/`)}>{p.nav.cv[L]}</a>
     </div>
   </header>
 
   <main>
-    <section class="hero" data-hero>
+    <section class="hero">
       <div class="hero-text">
         <p class="kicker reveal">{p.hero.kicker[L]}</p>
-        <h1 class="name reveal" style="--d:80ms">{ar
-          ? (() => { const w = profile.name.ar.split(' '); return <><span class="nl">{w.slice(0, 2).join(' ')}</span> <span class="nl">{w.slice(2).join(' ')}</span></>; })()
-          : profile.name[L]}</h1>
-        <p class="line reveal" style="--d:160ms">{p.hero.line[L]}</p>
-        <div class="ctas reveal" style="--d:240ms">
+        <h1 class="name reveal" style="--d:60ms">
+          <span class="nl">{nameWords.slice(0, 2).join(' ')}</span>
+          {nameWords.length > 2 && <span class="nl">{nameWords.slice(2).join(' ')}</span>}
+        </h1>
+        <p class="line reveal" style="--d:120ms">{p.hero.line[L]}</p>
+        <div class="ctas reveal" style="--d:180ms">
           <a class="btn primary" href="#work">{p.hero.cta[L]}</a>
           <a class="btn" href={url(`/${lang}/`)}>{p.nav.cv[L]}</a>
         </div>
       </div>
-      <div class="hero-art reveal" style="--d:120ms">
-        <Qamariya lang={lang} label={p.hero.windowLabel[L]} />
-        <p class="caption">{p.hero.caption[L]}</p>
+      <div class="hero-console reveal" style="--d:140ms">
+        <Console lang={lang} />
       </div>
     </section>
 
@@ -121,7 +104,7 @@ function pick(i: number) {
       <p class="live-note"><span class="pulse" aria-hidden="true"></span>{p.numbers.live[L]}</p>
       <ul>
         {numbers.map((n, i) => (
-          <li class="reveal" style={`--d:${i * 90}ms`}>
+          <li class="reveal" style={`--d:${i * 80}ms`}>
             <strong class="num" data-count={n.value} data-live={n.live} data-locale={ar ? 'ar-EG' : 'en-US'}>{nf(n.value)}</strong>
             <span>{n.label}</span>
           </li>
@@ -129,15 +112,11 @@ function pick(i: number) {
       </ul>
     </section>
 
-    <section class="statement">
-      <p>{words.map((w, i) => <><span class="w" style={`--i:${i}`}>{w}</span>{' '}</>)}</p>
-    </section>
-
     <section id="work" class="work">
-      <header class="work-head">
+      <header class="sec-head">
         <h2 class="reveal">{p.work.title[L]}</h2>
-        <p class="sub reveal" style="--d:80ms">{p.work.sub[L]}</p>
-        <div class="filters reveal" style="--d:140ms" role="group" aria-label={ar ? 'تصفية' : 'Filter'}>
+        <p class="sub reveal" style="--d:60ms">{p.work.sub[L]}</p>
+        <div class="filters reveal" style="--d:120ms" role="group" aria-label={ar ? 'تصفية المشاريع' : 'Filter projects'}>
           {groups.map((g) => (
             <button type="button" class:list={['filter', g === 'all' && 'on']} data-filter={g} aria-pressed={g === 'all' ? 'true' : 'false'}>
               {p.work.filters[g][L]}
@@ -146,26 +125,57 @@ function pick(i: number) {
           ))}
         </div>
       </header>
-      <ul class="gallery">
-        {projects.map((proj, i) => (
-          <li class="win reveal" data-group={proj.group} data-id={proj.id} style={`--d:${(i % 3) * 90}ms`}>
-            <button type="button" class="win-btn" data-open={proj.id} aria-haspopup="dialog">
-              <span class="win-art"><Poster project={proj} lang={lang} /></span>
-              <span class="win-cap">
-                <span class="win-title">{proj.title[L]}</span>
-                <span class="win-hook">{proj.hook[L]}</span>
-              </span>
-            </button>
-            <template data-tpl={proj.id}>
-              <h3 class="d-title">{proj.title[L]}</h3>
-              {proj.client && <p class="d-tag">{p.work.client[L]}</p>}
-              <p class="d-hook">{proj.hook[L]}</p>
-              <ul class="d-points">{proj.bullets[L].map((b) => <li>{b}</li>)}</ul>
-              <p class="d-stack">{proj.stack.map((s) => <span>{s}</span>)}</p>
-              <p class="d-links">{proj.links.map((l) => <a href={l.href} target="_blank" rel="noopener" dir="ltr">{l.label} <span aria-hidden="true">↗</span></a>)}</p>
-            </template>
-          </li>
-        ))}
+
+      <ul class="cards">
+        {cards.map((proj) => {
+          const vis = cardVisual[proj.id];
+          return (
+            <li class:list={['card', 'reveal', vis ? 'wide' : 'normal', `g-${proj.group}`]} data-group={proj.group} data-id={proj.id}>
+              <button type="button" class="card-btn" data-open={proj.id} aria-haspopup="dialog">
+                {vis && (
+                  <span class:list={['vis', `vis-${vis}`]} data-vis>
+                    {vis === 'papers' && (
+                      <span class="vis-papers" dir="ltr">
+                        {demo.papers.papers.slice(0, 3).map((x) => <span class="vp"><b>{x.title}</b><i>{x.source} · {x.year}</i></span>)}
+                      </span>
+                    )}
+                    {vis === 'storyset' && (
+                      <span class="vis-story">
+                        {demo.storyset.results.slice(0, 3).map((x) => <img src={x.preview_url} alt="" loading="lazy" width="200" height="150" />)}
+                      </span>
+                    )}
+                    {vis === 'subscribers' && (
+                      <span class="vis-num">
+                        <b data-live="subscribers" data-count={live.subscribers} data-locale={ar ? 'ar-EG' : 'en-US'}>{nf(live.subscribers)}</b>
+                        <i>{p.work.subscribers[L]} · ‎@hr_yemen</i>
+                      </span>
+                    )}
+                    {vis === 'shot' && <img class="shot" src={url(`/shots/${proj.id}.webp`)} alt={shotAlt(proj.title[L])} loading="lazy" width="960" height="600" />}
+                  </span>
+                )}
+                <span class="card-body">
+                  <span class="card-top">
+                    <span class="card-group">{p.work.filters[proj.group][L]}</span>
+                    {liveIds.has(proj.id) && <span class="badge live"><span class="pulse" aria-hidden="true"></span>{p.work.live[L]}</span>}
+                    {proj.client && <span class="badge">{p.work.client[L]}</span>}
+                  </span>
+                  <span class="card-title">{proj.title[L]}</span>
+                  <code class="card-sig" dir="ltr">{signatures[proj.id]}</code>
+                  <span class="card-hook">{proj.hook[L]}</span>
+                </span>
+              </button>
+              <template data-tpl={proj.id}>
+                <p class="d-group">{p.work.filters[proj.group][L]}{proj.client && ` · ${p.work.client[L]}`}</p>
+                <h3 class="d-title">{proj.title[L]}</h3>
+                <code class="card-sig" dir="ltr">{signatures[proj.id]}</code>
+                <p class="d-hook">{proj.hook[L]}</p>
+                <ul class="d-points">{proj.bullets[L].map((b) => <li>{b}</li>)}</ul>
+                <p class="d-stack">{proj.stack.map((s) => <span>{s}</span>)}</p>
+                <p class="d-links">{proj.links.map((l) => <a href={l.href} target="_blank" rel="noopener" dir="ltr">{l.label} <span aria-hidden="true">↗</span></a>)}</p>
+              </template>
+            </li>
+          );
+        })}
       </ul>
     </section>
 
@@ -173,7 +183,7 @@ function pick(i: number) {
       <h2 class="path-title reveal">{p.path.title[L]}</h2>
       <ol class="path-list">
         {pathItems.map((it, i) => (
-          <li class="reveal" style={`--d:${i * 60}ms`}>
+          <li class="reveal" style={`--d:${i * 50}ms`}>
             <span class="yrs">{it.years}</span>
             <div>
               <h3>{it.role} <span class="org">{it.org}</span></h3>
@@ -188,25 +198,27 @@ function pick(i: number) {
       </ol>
     </section>
 
-    <section class="stack" aria-label={p.stack.title[L]}>
-      <h2 class="visually-hidden">{p.stack.title[L]}</h2>
-      <div class="marquee" aria-hidden="true">
-        <div class="track">
-          {[0, 1].map(() => <span class="run">{stack.map((s) => <><b>{s}</b><i>◆</i></>)}</span>)}
-        </div>
+    <section class="tech">
+      <h2 class="reveal">{p.tech.title[L]}</h2>
+      <div class="tech-grid">
+        {tech.map((g, i) => (
+          <div class="tech-group reveal" style={`--d:${i * 60}ms`}>
+            <h3>{g.label[L]}</h3>
+            <ul dir="ltr">{g.items.map((t) => <li>{t}</li>)}</ul>
+          </div>
+        ))}
       </div>
-      <p class="visually-hidden">{stack.join(', ')}</p>
     </section>
 
     <section id="contact" class="contact">
       <h2 class="reveal">{p.contact.title[L]}</h2>
-      <p class="sub reveal" style="--d:80ms">{p.contact.sub[L]}</p>
-      <div class="contact-row reveal" style="--d:160ms">
+      <p class="sub reveal" style="--d:60ms">{p.contact.sub[L]}</p>
+      <div class="contact-row reveal" style="--d:120ms">
         <a class="btn primary big" href={`mailto:${profile.email}`}>{p.contact.email[L]}</a>
-        <button class="btn" type="button" data-copy={profile.email} data-done={p.contact.copied[L]}>{p.contact.copy[L]}</button>
+        <button class="btn big" type="button" data-copy={profile.email} data-done={p.contact.copied[L]}>{p.contact.copy[L]}</button>
       </div>
       <p class="mail" dir="ltr">{profile.email}</p>
-      <ul class="socials reveal" style="--d:220ms">
+      <ul class="socials reveal" style="--d:180ms">
         {profile.links.map((l) => <li><a href={l.href} target="_blank" rel="noopener" dir="ltr">{l.label}</a></li>)}
         <li><a href={url('/ar/')}>{p.contact.cvAr[L]}</a></li>
         <li><a href={url('/en/')}>{p.contact.cvEn[L]}</a></li>
@@ -220,7 +232,7 @@ function pick(i: number) {
   </footer>
 
   <dialog class="sheet" id="project-dialog" aria-labelledby="dlg-title">
-    <div class="sheet-art"></div>
+    <div class="sheet-vis"></div>
     <div class="sheet-body"></div>
     <button class="sheet-close" type="button" data-close aria-label={p.work.close[L]}>×</button>
   </dialog>
